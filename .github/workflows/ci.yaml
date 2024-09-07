@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    tags:
+      - "*"
+    branches:
+      - master
+  pull_request:
+    branches: [master]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: extractions/setup-just@v2
+
+      - name: Install dynamic libs
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-4-dev libcogl-pango-dev
+
+      - name: Run check
+        run: just check
+
+  release:
+    needs: check
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get the release version from the tag
+        shell: bash
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install dynamic libs
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-4-dev libcogl-pango-dev
+
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: false
+          command: build
+          args: --verbose --release --target x86_64-unknown-linux-gnu
+
+      - name: Build archive
+        shell: bash
+        run: |
+          binary_name="crowbar"
+          dirname="$binary_name-${{ env.VERSION }}-x86_64-linux-gnu"
+          mkdir "$dirname"
+          mv "target/x86_64-unknown-linux-gnu/release/$binary_name" "$dirname"
+          tar -czf "$dirname.tar.gz" "$dirname"
+          echo "ASSET=$dirname.tar.gz" >> $GITHUB_ENV
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ${{ env.ASSET }}

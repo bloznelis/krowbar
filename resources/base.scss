@@ -1,0 +1,149 @@
+krowbar {
+    background: $bg;
+}
+
+separator {
+    background: $bg;
+    color: $accent;
+}
+
+win-count {
+    background: $bg;
+    color: $fg_dim;
+    padding: 0px 0px 0px 15px;
+}
+
+active-node-name {
+    background: $bg;
+    color: $fg;
+    padding: 0px 0px 0px 15px;
+}
+
+$widget-padding: 0px 7px 0px 7px;
+
+battery {
+    background: $bg;
+    padding: $widget-padding;
+}
+
+battery.battery-high {
+    color: $ok_dim;
+}
+
+battery.battery-mid {
+    color: $fg;
+}
+
+battery.battery-low {
+    color: $alert;
+}
+
+storage {
+    background: $bg;
+    padding: $widget-padding;
+}
+
+storage.storage-high {
+    color: $alert;
+}
+
+storage.storage-mid {
+    color: $warn;
+}
+
+storage.storage-low {
+    color: $fg;
+}
+
+network {
+    background: $bg;
+    padding: $widget-padding;
+    color: $fg;
+}
+
+cpu {
+    background: $bg;
+    padding: $widget-padding;
+}
+
+cpu.cpu-high {
+    color: $alert;
+}
+
+cpu.cpu-mid {
+    color: $warn;
+}
+
+cpu.cpu-low {
+    color: $fg;
+}
+
+mem {
+    background: $bg;
+    padding: $widget-padding;
+}
+
+mem.mem-high {
+    color: $alert;
+}
+
+mem.mem-mid {
+    color: $warn;
+}
+
+mem.mem-low {
+    color: $fg;
+}
+
+clock {
+    color: $fg;
+    background: $bg_dim;
+    padding: 0px 10px 0px 10px;
+    margin: 0px 0px 0px 40px;
+}
+
+button {
+    background-image: none;
+    padding: 0px 8px;
+    min-width: 15px;
+}
+
+button.empty-desktop {
+    color: $fg_dim;
+    background: $bg_dim;
+}
+
+button.focused-desktop {
+    color: $bg;
+    background: $fg;
+}
+
+button.non-empty-desktop {
+    color: $bg;
+    background: $fg_dim;
+}
+
+button.urgent-desktop {
+    color: $bg;
+    background: $alert;
+    animation: blink 250ms ease-in-out 2;
+}
+
+button.empty-desktop:hover,
+button.focused-desktop:hover,
+button.non-empty-desktop:hover,
+button.urgent-desktop:hover {
+    color: $bg;
+    background: $fg_bright;
+    transition: 250ms;
+}
+
+@keyframes blink {
+  0% {
+    background-color: $bg_dim;
+  }
+  100% {
+    background-color: $alert;
+  }
+}
+

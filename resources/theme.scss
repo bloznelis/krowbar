@@ -1,0 +1,42 @@
+$black   : #1c1c1c;
+$red     : #bc5653;
+$green   : #909d63;
+$yellow  : #ebc17a;
+$blue    : #7eaac7;
+$magenta : #aa6292;
+$cyan    : #86d3ce;
+$white   : #cacaca;
+
+$black_bright   : #636363;
+$red_bright     : #bc5653;
+$green_bright   : #909d63;
+$yellow_bright  : #ebc17a;
+$blue_bright    : #7eaac7;
+$magenta_bright : #aa6292;
+$cyan_bright    : #86d3ce;
+$white_bright   : #f7f7f7;
+
+$black_dim   : #232323;
+$red_dim     : #74423f;
+$green_dim   : #5e6547;
+$yellow_dim  : #8b7653;
+$blue_dim    : #556b79;
+$magenta_dim : #6e4962;
+$cyan_dim    : #5c8482;
+$white_dim   : #828282;
+
+// krowbar classic
+$fg: $yellow;
+$fg_dim: $yellow_dim;
+$fg_bright: $yellow_bright;
+$ok: $green;
+$ok_dim: $green_dim;
+$alert: $red;
+$alert_dim: $red_dim;
+$warn: $yellow;
+$warn_dim: $yellow_dim;
+$background: $black;
+$background_dim: $black_dim;
+$bright: $white;
+$bright_dim: $white_dim;
+$accent: $red;
