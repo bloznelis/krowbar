@@ -1,6 +1,6 @@
 [package]
 name = "crowbar"
-version = "1.0.0"
+version = "0.1.0"
 authors = ["bloznelis <lukas.bloznelis@gmail.com>"]
 description = "Status bar for BSPWM"
 license = "MIT"
