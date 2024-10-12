@@ -20,7 +20,7 @@ jobs:
       - name: Install dynamic libs
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-4-dev libcogl-pango-dev libcairo2-dev
+          sudo apt-get install -y libgtk-4-dev
 
       - name: Run check
         run: just check
@@ -44,8 +44,7 @@ jobs:
       - name: Install dynamic libs
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-4-dev libcogl-pango-dev libcairo2-dev
-
+          sudo apt-get install -y libgtk-4-dev
       - name: Build
         uses: actions-rs/cargo@v1
         with:
