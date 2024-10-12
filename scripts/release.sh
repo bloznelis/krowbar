@@ -25,7 +25,7 @@ then
 
   gum confirm "Old tag: $current_tag | new tag: $new_tag" \
     && sed -i "s|version = \"[0-9.]*\"$|version = \"$new_tag\"|" Cargo.toml \
-    && cargo update -p crowbar \
+    && cargo update -p crow_bar \
     && git add Cargo.* \
     && git commit -m "Release crowbar $new_tag" \
     && git tag -a $new_tag -m "crowbar $new_tag" \
