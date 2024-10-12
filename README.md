@@ -37,8 +37,5 @@ crowbar &
 ![left](https://github.com/user-attachments/assets/29cbcf44-b4cf-4f09-b618-0b725ed2ddb1)
 ![right](https://github.com/user-attachments/assets/3c7e8e1b-cf36-4db0-b8f1-ce190e416115)
 
-![2](https://github.com/user-attachments/assets/76dac05c-48c5-4f7b-bb37-e043307f7449)
-![3](https://github.com/user-attachments/assets/2faba457-232a-4b91-ad63-082ad007f6c7)
-
 ### TODO
 - Prepare arch release
