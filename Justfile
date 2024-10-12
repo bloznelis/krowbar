@@ -2,6 +2,10 @@
 help:
   just --list
 
+# Perform check
+check:
+  cargo check
+
 # Build the binary
 build:
   cargo build --release
