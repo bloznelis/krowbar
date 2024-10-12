@@ -1,8 +1,8 @@
-<h2 align=center> <b>crowbar</b> </h2>
+<h2 align=center> <b>krowbar</b> </h2>
 
 <p align="center"> <img alt="GitHub release (latest SemVer)" src="https://github.com/user-attachments/assets/4257a032-eb0d-4dd7-a414-779e410d2c19"> </p>
 <p align=center> Status bar made for BSPWM, focused on ease of use, stability and speed. </p>
-<p align=center> <img alt="GitHub release (latest SemVer)" src="https://img.shields.io/github/v/release/bloznelis/crowbar"> <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/bloznelis/crowbar/ci.yaml"> </p>
+<p align=center> <img alt="GitHub release (latest SemVer)" src="https://img.shields.io/github/v/release/bloznelis/krowbar"> <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/bloznelis/krowbar/ci.yaml"> </p>
 
 ### Motivation
 Generic status bars provide superior customization for the price of complexity, but I've always wanted a bar that just works out-of-the-box.
@@ -17,17 +17,17 @@ Generic status bars provide superior customization for the price of complexity, 
 ### Setup
 Add this to your `bspwmrc`:
 ```
-# Restarts crowbar, when restarting BSPWM. Allows for quick iteration, if configuring.
-killall crowbar
+# Restarts krowbar, when restarting BSPWM. Allows for quick iteration, if configuring.
+killall krowbar
 
-# Regular BSPWM monitor setup, crowbar will use these as dekstop names
+# Regular BSPWM monitor setup, krowbar will use these as dekstop names
 bspc monitor {your-monitor-name} -d web code III IV V VI
 
-# Start crowbar
-crowbar &
+# Start krowbar
+krowbar &
 ```
 
-### crowbar might be for you if you:
+### krowbar might be for you if you:
 - skipped on BSPWM, because it has no default status bar
 - are drowning in semi-working configuration
 - need a decently looking, working status bar, while searching for a nice [eww](https://github.com/elkowar/eww) config in [/r/unixporn](https://www.reddit.com/r/unixporn/)
