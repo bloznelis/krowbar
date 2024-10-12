@@ -6,15 +6,15 @@ use crate::Args;
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
 #[serde(default)]
-pub struct CrowbarConfig {
+pub struct KrowbarConfig {
     pub theme: Theme,
     pub font: Font,
     pub bar: Bar,
 }
 
-impl Default for CrowbarConfig {
+impl Default for KrowbarConfig {
     fn default() -> Self {
-        CrowbarConfig {
+        KrowbarConfig {
             theme: Theme::default(),
             font: Font::default(),
             bar: Bar::default(),
@@ -102,20 +102,20 @@ pub enum Position {
     Bottom,
 }
 
-pub fn read(args: &Args) -> anyhow::Result<CrowbarConfig> {
+pub fn read(args: &Args) -> anyhow::Result<KrowbarConfig> {
     let path = args.config.clone().unwrap_or(
         #[allow(deprecated)] // XXX: Warning regarding Windows, we don't care now
         std::env::home_dir()
             .expect("Home dir not found")
-            .join(".config/crowbar/config.toml"),
+            .join(".config/krowbar/config.toml"),
     );
 
     let cfg = if fs::exists(&path)? {
         let contents = fs::read_to_string(&path)?;
-        let config: CrowbarConfig = toml::from_str(&contents)?;
+        let config: KrowbarConfig = toml::from_str(&contents)?;
         config
     } else {
-        CrowbarConfig::default()
+        KrowbarConfig::default()
     };
 
     Ok(cfg)

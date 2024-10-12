@@ -15,7 +15,7 @@ use crate::{
     bspwm::{listen_to_bspwm, BspwmState, MonitorState},
     widgets::*,
     xbackend::{self, Monitor},
-    Args, Widget, config::{CrowbarConfig, Position},
+    Args, Widget, config::{KrowbarConfig, Position},
 };
 
 pub const FOCUSED_DESKTOP: &str = "focused-desktop";
@@ -297,7 +297,7 @@ async fn react_to_updates(
     }
 }
 
-pub fn run(args: Args, cfg: CrowbarConfig) -> i32 {
+pub fn run(args: Args, cfg: KrowbarConfig) -> i32 {
     let application = Application::builder().application_id("c.row.bar").build();
 
     let css_cfg = cfg.clone();
@@ -316,7 +316,7 @@ pub fn run(args: Args, cfg: CrowbarConfig) -> i32 {
     application.run_with_args::<&str>(&[]).value()
 }
 
-fn app_configure(app: &Application, args: Args, cfg: CrowbarConfig) -> anyhow::Result<()> {
+fn app_configure(app: &Application, args: Args, cfg: KrowbarConfig) -> anyhow::Result<()> {
     let x11 =
         Arc::new(X11Backend::new().map_err(|op| anyhow!("Failed to init X11 backend {:?}", op))?);
 
@@ -390,7 +390,7 @@ fn app_configure(app: &Application, args: Args, cfg: CrowbarConfig) -> anyhow::R
     Ok(())
 }
 
-fn attach_css(cfg: CrowbarConfig) -> anyhow::Result<()> {
+fn attach_css(cfg: KrowbarConfig) -> anyhow::Result<()> {
     let provider = gtk::CssProvider::new();
 
     let mut tt = TinyTemplate::new();
@@ -432,14 +432,14 @@ fn init_bar_window(
     receiver: async_broadcast::Receiver<SystemEvent>,
     monitor_state: &MonitorState,
     args: &Args,
-    cfg: &CrowbarConfig,
+    cfg: &KrowbarConfig,
 ) -> anyhow::Result<()> {
     let window = ApplicationWindow::builder()
         .application(app)
         .focusable(false)
         .can_focus(false)
-        .title("crowbar")
-        .css_name("crowbar")
+        .title("krowbar")
+        .css_name("krowbar")
         .build();
 
     let (sender, receiver_bar_event) = async_channel::bounded::<BarEvent>(1);

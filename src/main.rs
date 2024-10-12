@@ -47,7 +47,7 @@ pub struct Args {
     #[arg(
         short,
         long,
-        help = "Path to config. Defaults to ~/.config/crowbar/config.toml"
+        help = "Path to config. Defaults to ~/.config/krowbar/config.toml"
     )]
     pub config: Option<PathBuf>,
 }
@@ -69,7 +69,7 @@ fn setup_logging() -> anyhow::Result<()> {
     #[allow(deprecated)] // XXX: Warning regarding Windows, we don't care
     let log_path = std::env::home_dir()
         .ok_or(anyhow!("Failed to get home dir"))?
-        .join("crowbar.log");
+        .join("krowbar.log");
 
     let logfile = FileAppender::builder()
         .encoder(Box::new(PatternEncoder::new("{d} {l} {m}{n}")))

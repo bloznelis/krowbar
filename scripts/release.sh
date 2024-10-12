@@ -27,8 +27,8 @@ then
     && sed -i "s|version = \"[0-9.]*\"$|version = \"$new_tag\"|" Cargo.toml \
     && cargo update -p crow_bar \
     && git add Cargo.* \
-    && git commit -m "Release crowbar $new_tag" \
-    && git tag -a $new_tag -m "crowbar $new_tag" \
+    && git commit -m "Release krowbar $new_tag" \
+    && git tag -a $new_tag -m "krowbar $new_tag" \
     && gum spin --show-output --title="Pushing master" git push \
     && gum spin --show-output --title="Pushing tag: $new_tag" git push origin $new_tag
 

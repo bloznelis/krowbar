@@ -1,11 +1,11 @@
 [package]
-name = "crow_bar"
+name = "krowbar"
 version = "0.1.10"
 authors = ["bloznelis <lukas.bloznelis@gmail.com>"]
 description = "Status bar for BSPWM"
 license = "MIT"
-homepage = "https://github.com/bloznelis/crowbar"
-repository = "https://github.com/bloznelis/crowbar"
+homepage = "https://github.com/bloznelis/krowbar"
+repository = "https://github.com/bloznelis/krowbar"
 edition = "2021"
 keywords = ["bspwm", "statusbar", "ui"]
 readme = "README.md"

@@ -7,7 +7,7 @@ use x11rb::protocol::xproto::{ConnectionExt, PropMode};
 use x11rb::rust_connection::RustConnection;
 use x11rb::wrapper::ConnectionExt as _;
 
-use crate::config::CrowbarConfig;
+use crate::config::KrowbarConfig;
 use crate::config::Position;
 
 pub struct X11Backend {
@@ -72,7 +72,7 @@ impl X11Backend {
         }
     }
 
-    pub fn setup(&self, x11_win: u32, monitor: &Monitor, cfg: CrowbarConfig) -> Result<()> {
+    pub fn setup(&self, x11_win: u32, monitor: &Monitor, cfg: KrowbarConfig) -> Result<()> {
         self._setup(x11_win, monitor, &cfg)?;
         self._setup(x11_win, monitor, &cfg)?; // Some X11 race conditions here.
         self._setup(x11_win, monitor, &cfg)?; // Doesn't hurt to do more.
@@ -80,7 +80,7 @@ impl X11Backend {
         Ok(())
     }
 
-    fn _setup(&self, x11_win: u32, monitor: &Monitor, cfg: &CrowbarConfig) -> Result<()> {
+    fn _setup(&self, x11_win: u32, monitor: &Monitor, cfg: &KrowbarConfig) -> Result<()> {
         self.set_as_dock(x11_win)?;
         self.reparent(x11_win, self.root_window)?;
 
