@@ -2,7 +2,7 @@
 
 <p align="center"> <img alt="GitHub release (latest SemVer)" src="https://github.com/user-attachments/assets/4257a032-eb0d-4dd7-a414-779e410d2c19"> </p>
 <p align=center> Status bar made for BSPWM, focused on ease of use, stability and speed. </p>
-<p align=center> <img alt="GitHub release (latest SemVer)" src="https://img.shields.io/github/v/release/bloznelis/kbt"> <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/bloznelis/kbt/ci.yaml"> </p>
+<p align=center> <img alt="GitHub release (latest SemVer)" src="https://img.shields.io/github/v/release/bloznelis/crowbar"> <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/bloznelis/crowbar/ci.yaml"> </p>
 
 ### Motivation
 Generic status bars provide superior customization for the price of complexity, but I need a bar that just works out-of-the-box.
