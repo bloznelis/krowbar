@@ -22,9 +22,6 @@ Generic status bars provide superior customization for the price of complexity, 
 * In-built desktop, node count, active node name, network, cpu, mem, storage, battery, clock widgets.
 
 ### Install
-#### AUR
-`paru -S krowbar`
-
 #### Cargo
 `cargo install krowbar`
 
