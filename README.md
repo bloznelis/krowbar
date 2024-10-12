@@ -35,36 +35,6 @@ bspc monitor {your-monitor-name} -d web code III IV V VI
 krowbar &
 ```
 
-### Config
-**note:** expects config at `XDG_HOME/.config/krowbar/config.toml` or path passed via `--config`.
-
-``` toml
-[theme]
-fg = "#ebc17a"
-fg_dim = "#8b7653"
-fg_bright = "#f7f7f7"
-bg = "#1c1c1c"
-bg_dim = "#232323"
-ok = "#909d63"
-ok_dim = "#5e6547"
-alert = "#bc5653"
-alert_dim = "#74423f"
-warn = "#bc5653"
-warn_dim = "#74423f"
-bright = "#cacaca"
-bright_dim = "#828282"
-accent = "#bc5653"
-
-[font]
-font_family = "Terminess Nerd Font"
-font_size = "16px"
-font_weight = "bold"
-
-[bar]
-height = 25
-position = "Top" # Top or Bottom
-```
-
 ### Showcase
 #### krowbar classic
 ![](https://github.com/bloznelis/krowbar/blob/master/images/krowbar-classic-1.png)
@@ -103,7 +73,37 @@ height = 20
 ![](https://github.com/bloznelis/krowbar/blob/master/images/krowbar-moss-1.png)
 ![](https://github.com/bloznelis/krowbar/blob/master/images/krowbar-moss-2.png)
 
-### You might want to try krowbar out if you:
+### Config
+**note:** expects config at `XDG_HOME/.config/krowbar/config.toml` or path passed via `--config`.
+
+``` toml
+[theme]
+fg = "#ebc17a"
+fg_dim = "#8b7653"
+fg_bright = "#f7f7f7"
+bg = "#1c1c1c"
+bg_dim = "#232323"
+ok = "#909d63"
+ok_dim = "#5e6547"
+alert = "#bc5653"
+alert_dim = "#74423f"
+warn = "#bc5653"
+warn_dim = "#74423f"
+bright = "#cacaca"
+bright_dim = "#828282"
+accent = "#bc5653"
+
+[font]
+font_family = "Terminess Nerd Font"
+font_size = "16px"
+font_weight = "bold"
+
+[bar]
+height = 30
+position = "Top" # Top or Bottom
+```
+
+### You should try out krowbar if you:
 - Skipped on BSPWM, because it has no default status bar
 - Are drowning in semi-working configuration
 - Need a decently looking, functional status bar while searching for a nice [eww](https://github.com/elkowar/eww) config in [/r/unixporn](https://www.reddit.com/r/unixporn/)
