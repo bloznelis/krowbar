@@ -5,7 +5,7 @@
 <p align=center> <img alt="GitHub release (latest SemVer)" src="https://img.shields.io/github/v/release/bloznelis/crowbar"> <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/bloznelis/crowbar/ci.yaml"> </p>
 
 ### Motivation
-Generic status bars provide superior customization for the price of complexity, but I need a bar that just works out-of-the-box.
+Generic status bars provide superior customization for the price of complexity, but I've always wanted a bar that just works out-of-the-box.
 
 ### Features
 * Listens to BSPWM events directly via Unix socket
@@ -17,27 +17,21 @@ Generic status bars provide superior customization for the price of complexity, 
 ### Setup
 Add this to your `bspwmrc`:
 ```
+# Restarts crowbar, when restarting BSPWM. Allows for quick iteration, if configuring.
+killall crowbar
+
 # Regular BSPWM monitor setup, crowbar will use these as dekstop names
 bspc monitor {your-monitor-name} -d web code III IV V VI
-
-# Reset padding (optional, but recommended)
-bspc config top_padding 0
-bspc config bottom_padding 0
 
 # Start crowbar
 crowbar &
 ```
 
-### Is this for me?
-#### It might be for you if you:
+### crowbar might be for you if you:
 - skipped on BSPWM, because it has no default status bar
 - are drowning in semi-working configuration
-- need a working status bar, while searching for a nice [eww](https://github.com/elkowar/eww) config in [/r/unixporn](https://www.reddit.com/r/unixporn/)
+- need a decently looking, working status bar, while searching for a nice [eww](https://github.com/elkowar/eww) config in [/r/unixporn](https://www.reddit.com/r/unixporn/)
 - always wanted something akin to [i3status](https://i3wm.org/docs/i3status.html) but for BSPWM
-
-#### It's probably not for you if you:
-- need a systray
-- are a big fan of **complex** customization
 
 ### Showcase
 ![left](https://github.com/user-attachments/assets/29cbcf44-b4cf-4f09-b618-0b725ed2ddb1)
