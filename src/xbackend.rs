@@ -7,7 +7,8 @@ use x11rb::protocol::xproto::{ConnectionExt, PropMode};
 use x11rb::rust_connection::RustConnection;
 use x11rb::wrapper::ConnectionExt as _;
 
-use crate::Args;
+use crate::config::CrowbarConfig;
+use crate::config::Position;
 
 pub struct X11Backend {
     conn: RustConnection,
@@ -71,30 +72,30 @@ impl X11Backend {
         }
     }
 
-    pub fn setup(&self, x11_win: u32, monitor: &Monitor, args: Args) -> Result<()> {
-        self._setup(x11_win, monitor, &args)?;
-        self._setup(x11_win, monitor, &args)?; // Some X11 race conditions here.
-        self._setup(x11_win, monitor, &args)?; // Doesn't hurt to do more.
+    pub fn setup(&self, x11_win: u32, monitor: &Monitor, cfg: CrowbarConfig) -> Result<()> {
+        self._setup(x11_win, monitor, &cfg)?;
+        self._setup(x11_win, monitor, &cfg)?; // Some X11 race conditions here.
+        self._setup(x11_win, monitor, &cfg)?; // Doesn't hurt to do more.
 
         Ok(())
     }
 
-    fn _setup(&self, x11_win: u32, monitor: &Monitor, args: &Args) -> Result<()> {
+    fn _setup(&self, x11_win: u32, monitor: &Monitor, cfg: &CrowbarConfig) -> Result<()> {
         self.set_as_dock(x11_win)?;
         self.reparent(x11_win, self.root_window)?;
 
-        let (x, y) = match args.position {
-            crate::Position::Top => (monitor.x_offset, monitor.y_offset),
-            crate::Position::Bottom => {
+        let (x, y) = match cfg.bar.position {
+            Position::Top => (monitor.x_offset, monitor.y_offset),
+            Position::Bottom => {
                 let x = monitor.x_offset.into();
-                let y = monitor.y_offset + monitor.height as i16 - args.height as i16;
+                let y = monitor.y_offset + monitor.height as i16 - cfg.bar.height as i16;
 
                 (x, y)
             }
         };
 
         self.place_window_at(x11_win, x.into(), y.into())?;
-        self.resize_window(x11_win, monitor.width.into(), args.height.into())?;
+        self.resize_window(x11_win, monitor.width.into(), cfg.bar.height.into())?;
 
         Ok(())
     }

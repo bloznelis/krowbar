@@ -13,12 +13,6 @@ use log4rs::encode::pattern::PatternEncoder;
 use std::path::PathBuf;
 use std::process::ExitCode;
 
-#[derive(Copy, Clone, Debug, ValueEnum)]
-pub enum Position {
-    Top,
-    Bottom,
-}
-
 #[derive(Copy, Clone, Debug, ValueEnum, Hash, Eq, PartialEq)]
 pub enum Widget {
     Desktops,
@@ -37,10 +31,6 @@ pub enum Widget {
 pub struct Args {
     #[arg(short, long, help = "Enable debug logging")]
     debug: bool,
-    #[arg(value_enum, default_value_t = Position::Top, short, long, help = "Bar position")]
-    pub position: Position,
-    #[arg(long, default_value_t = 30, help = "Bar height")]
-    pub height: u16,
     #[arg(long, value_delimiter = ',', help = "Enabled widgets")]
     pub enabled_widgets: Option<Vec<Widget>>,
     #[arg(
@@ -69,6 +59,8 @@ async fn main() -> ExitCode {
         setup_logging().expect("Failed to setup debug logging");
     }
     let config = config::read(&args).expect("Failed to read config");
+
+    println!("{:?}", config);
 
     ExitCode::from(bar::run(args, config) as u8)
 }

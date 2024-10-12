@@ -4,11 +4,12 @@ use toml;
 
 use crate::Args;
 
-#[derive(Deserialize, Serialize, Clone)]
+#[derive(Deserialize, Serialize, Clone, Debug)]
 #[serde(default)]
 pub struct CrowbarConfig {
     pub theme: Theme,
     pub font: Font,
+    pub bar: Bar,
 }
 
 impl Default for CrowbarConfig {
@@ -16,11 +17,12 @@ impl Default for CrowbarConfig {
         CrowbarConfig {
             theme: Theme::default(),
             font: Font::default(),
+            bar: Bar::default(),
         }
     }
 }
 
-#[derive(Deserialize, Serialize, Clone)]
+#[derive(Deserialize, Serialize, Clone, Debug)]
 #[serde(default)]
 pub struct Theme {
     pub fg: String,
@@ -60,7 +62,7 @@ impl Default for Theme {
     }
 }
 
-#[derive(Deserialize, Serialize, Clone)]
+#[derive(Deserialize, Serialize, Clone, Debug)]
 #[serde(default)]
 pub struct Font {
     pub font_family: String,
@@ -76,6 +78,28 @@ impl Default for Font {
             font_weight: "bold".to_string(),
         }
     }
+}
+
+#[derive(Deserialize, Serialize, Clone, Debug)]
+#[serde(default)]
+pub struct Bar {
+    pub height: u16,
+    pub position: Position,
+}
+
+impl Default for Bar {
+    fn default() -> Self {
+        Bar {
+            height: 10,
+            position: Position::Bottom,
+        }
+    }
+}
+
+#[derive(Deserialize, Serialize, Clone, Debug)]
+pub enum Position {
+    Top,
+    Bottom,
 }
 
 pub fn read(args: &Args) -> anyhow::Result<CrowbarConfig> {

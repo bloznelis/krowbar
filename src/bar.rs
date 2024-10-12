@@ -15,7 +15,7 @@ use crate::{
     bspwm::{listen_to_bspwm, BspwmState, MonitorState},
     widgets::*,
     xbackend::{self, Monitor},
-    Args, Widget, config::CrowbarConfig,
+    Args, Widget, config::{CrowbarConfig, Position},
 };
 
 pub const FOCUSED_DESKTOP: &str = "focused-desktop";
@@ -300,12 +300,13 @@ async fn react_to_updates(
 pub fn run(args: Args, cfg: CrowbarConfig) -> i32 {
     let application = Application::builder().application_id("c.row.bar").build();
 
-    application.connect_startup(move |_| match attach_css(cfg.clone()) {
+    let css_cfg = cfg.clone();
+    application.connect_startup(move |_| match attach_css(css_cfg.clone()) {
         Ok(_) => log::info!("css attached"),
         Err(err) => log::error!("failed while attaching css {err}"),
     });
 
-    application.connect_activate(move |app| match app_configure(app, args.clone()) {
+    application.connect_activate(move |app| match app_configure(app, args.clone(), cfg.clone()) {
         Ok(_) => log::info!("bar configured"),
         Err(err) => log::error!("failed while conifguring app {err}"),
     });
@@ -315,7 +316,7 @@ pub fn run(args: Args, cfg: CrowbarConfig) -> i32 {
     application.run_with_args::<&str>(&[]).value()
 }
 
-fn app_configure(app: &Application, args: Args) -> anyhow::Result<()> {
+fn app_configure(app: &Application, args: Args, cfg: CrowbarConfig) -> anyhow::Result<()> {
     let x11 =
         Arc::new(X11Backend::new().map_err(|op| anyhow!("Failed to init X11 backend {:?}", op))?);
 
@@ -346,6 +347,7 @@ fn app_configure(app: &Application, args: Args) -> anyhow::Result<()> {
                 receiver.clone(),
                 state.find_monitor(&monitor.name)?,
                 &args,
+                &cfg,
             )
         })
         .collect::<anyhow::Result<()>>()?;
@@ -430,6 +432,7 @@ fn init_bar_window(
     receiver: async_broadcast::Receiver<SystemEvent>,
     monitor_state: &MonitorState,
     args: &Args,
+    cfg: &CrowbarConfig,
 ) -> anyhow::Result<()> {
     let window = ApplicationWindow::builder()
         .application(app)
@@ -492,20 +495,20 @@ fn init_bar_window(
         .map_err(|op| anyhow!("Failed while setting border_width {}", op))?;
 
     if !args.no_pad {
-        match args.position {
-            crate::Position::Top => {
+        match cfg.bar.position {
+            Position::Top => {
                 std::process::Command::new("bspc")
                     .arg("config")
                     .arg("top_padding")
-                    .arg(args.height.to_string())
+                    .arg(cfg.bar.height.to_string())
                     .output()
                     .map_err(|op| anyhow!("Failed while setting top padding {}", op))?;
             }
-            crate::Position::Bottom => {
+            Position::Bottom => {
                 std::process::Command::new("bspc")
                     .arg("config")
                     .arg("bottom_padding")
-                    .arg(args.height.to_string())
+                    .arg(cfg.bar.height.to_string())
                     .output()
                     .map_err(|op| anyhow!("Failed while setting bottom padding {}", op))?;
             }
@@ -513,7 +516,7 @@ fn init_bar_window(
     }
 
     x11.clone()
-        .setup(x11_win, monitor, args.clone())
+        .setup(x11_win, monitor, cfg.clone())
         .map_err(|op| anyhow!("Failed to setup window via X11 {:?}", op))?;
 
     Ok(())
