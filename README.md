@@ -1,8 +1,14 @@
 <h2 align=center> <b>krowbar</b> </h2>
 
 <p align="center"> <img alt="GitHub release (latest SemVer)" src="https://github.com/user-attachments/assets/4257a032-eb0d-4dd7-a414-779e410d2c19"> </p>
+<div align="center">
+
+> "Oh, and before I forget, I think you dropped this back in Black Mesa!" [[1]](https://half-life.fandom.com/wiki/Crowbar)
+
+</div>
 <p align=center> Status bar made for BSPWM, focused on ease of use, stability and speed. </p>
 <p align=center> <img alt="GitHub release (latest SemVer)" src="https://img.shields.io/github/v/release/bloznelis/krowbar"> <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/bloznelis/krowbar/ci.yaml"> </p>
+
 
 ### Motivation
 Generic status bars provide superior customization for the price of complexity, but I've always wanted a BSPWM bar that just works out-of-the-box.
