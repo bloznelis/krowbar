@@ -9,7 +9,6 @@ repository = "https://github.com/bloznelis/crowbar"
 edition = "2021"
 keywords = ["bspwm", "statusbar", "ui"]
 readme = "README.md"
-name = "crowbar"
 
 [dependencies]
 bspc-rs = "0.1.1"
