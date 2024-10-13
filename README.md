@@ -139,7 +139,7 @@ font_weight = "bold"
 height = 20
 ```
 
-### You might want to try out krowbar if you:
+#### krowbar might be for you, if you:
 - Skipped on BSPWM, because it has no default status bar
 - Are drowning in semi-working configuration
 - Need a decently looking, functional status bar while searching for a nice [eww](https://github.com/elkowar/eww) config in [/r/unixporn](https://www.reddit.com/r/unixporn/)
