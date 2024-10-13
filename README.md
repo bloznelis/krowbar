@@ -11,7 +11,7 @@
 
 
 ### Motivation
-Generic status bars provide superior customization for the price of complexity, but I've always wanted a BSPWM bar that just works out-of-the-box.
+Generic status bars, while being complex, provide great customization, but I've always wanted a BSPWM bar that just works out-of-the-box.
 
 ### Features
 * Listens to BSPWM events directly via Unix socket, i.e. instant updates
