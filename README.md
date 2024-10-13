@@ -70,7 +70,7 @@ font_weight = "bold"
 
 [bar]
 height = 30
-position = "Bottom" # Top or Bottom
+position = "Top" # Top or Bottom
 ```
 #### Args
 Some additional configuration can be done via CLI args:
