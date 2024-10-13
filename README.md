@@ -41,7 +41,7 @@ krowbar &
 ### Config
 `krowbar` looks for a config at `XDG_HOME/.config/krowbar/config.toml` or path passed via `--config`.
 
-All values are optional, so in the config define only those you want to change (see Examples section).
+All values are optional, redefine only those you want to change (see Examples section).
 ``` toml
 # Default values
 
@@ -69,6 +69,29 @@ font_weight = "bold"
 [bar]
 height = 30
 position = "Bottom" # Top or Bottom
+```
+#### Args
+Some additional configuration can be done via CLI args:
+```
+Status bar for BSPWM
+
+Usage: krowbar [OPTIONS]
+
+Options:
+  -d, --debug
+          Enable debug logging
+      --enabled-widgets <ENABLED_WIDGETS>
+          Enabled widgets [possible values: desktops, win-count, focused-name, network, cpu, mem, disk, bat, clock]
+      --disabled-widgets <DISABLED_WIDGETS>
+          Disabled widgets (takes precedence over --enabled-widgets) [possible values: desktops, win-count, focused-name, network, cpu, mem, disk, bat, clock]
+      --no-pad
+          Disable automatic padding. Useful when you want to manage padding yourself.
+  -c, --config <CONFIG>
+          Path to config. Defaults to ~/.config/krowbar/config.toml
+  -h, --help
+          Print help
+  -V, --version
+          Print version
 ```
 
 ### Examples
