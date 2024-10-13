@@ -38,48 +38,13 @@ bspc monitor {your-monitor-name} -d web code III IV V VI
 krowbar &
 ```
 
-### Showcase
-#### krowbar classic
-![](https://github.com/bloznelis/krowbar/blob/master/images/krowbar-classic-1.png)
-![](https://github.com/bloznelis/krowbar/blob/master/images/krowbar-classic-2.png)
-
-#### krowbar mute
-```toml
-# ~/.config/krowbar/config.toml
-
-[theme]
-fg = "#cacaca"
-fg_dim = "#828282"
-```
-
-![](https://github.com/bloznelis/krowbar/blob/master/images/krowbar-gray-1.png)
-![](https://github.com/bloznelis/krowbar/blob/master/images/krowbar-gray-2.png)
-
-#### krowbar moss
-```toml
-# ~/.config/krowbar/config.toml
-
-[theme]
-fg = "#909d63"
-fg_dim = "#5e6547"
-accent = "#ebc17a"
-
-[font]
-font_family = "Terminess Nerd Font"
-font_size = "12px"
-font_weight = "bold"
-
-[bar]
-height = 20
-```
-
-![](https://github.com/bloznelis/krowbar/blob/master/images/krowbar-moss-1.png)
-![](https://github.com/bloznelis/krowbar/blob/master/images/krowbar-moss-2.png)
-
 ### Config
-**note:** expects config at `XDG_HOME/.config/krowbar/config.toml` or path passed via `--config`.
+`krowbar` looks for a config at `XDG_HOME/.config/krowbar/config.toml` or path passed via `--config`.
 
+All values are optional, so in the config define only those you want to change (see Examples section).
 ``` toml
+# Default values
+
 [theme]
 fg = "#ebc17a"
 fg_dim = "#8b7653"
@@ -103,10 +68,45 @@ font_weight = "bold"
 
 [bar]
 height = 30
-position = "Top" # Top or Bottom
+position = "Bottom" # Top or Bottom
 ```
 
-### You should try out krowbar if you:
+### Examples
+#### krowbar classic
+![](https://github.com/bloznelis/krowbar/blob/master/images/krowbar-classic-1.png)
+![](https://github.com/bloznelis/krowbar/blob/master/images/krowbar-classic-2.png)
+
+#### krowbar mute
+![](https://github.com/bloznelis/krowbar/blob/master/images/krowbar-gray-1.png)
+![](https://github.com/bloznelis/krowbar/blob/master/images/krowbar-gray-2.png)
+
+```toml
+[theme]
+fg = "#cacaca"
+fg_dim = "#828282"
+```
+
+
+#### krowbar moss
+![](https://github.com/bloznelis/krowbar/blob/master/images/krowbar-moss-1.png)
+![](https://github.com/bloznelis/krowbar/blob/master/images/krowbar-moss-2.png)
+
+```toml
+[theme]
+fg = "#909d63"
+fg_dim = "#5e6547"
+accent = "#ebc17a"
+
+[font]
+font_family = "Terminess Nerd Font"
+font_size = "12px"
+font_weight = "bold"
+
+[bar]
+height = 20
+```
+
+### You might want to try out krowbar if you:
 - Skipped on BSPWM, because it has no default status bar
 - Are drowning in semi-working configuration
 - Need a decently looking, functional status bar while searching for a nice [eww](https://github.com/elkowar/eww) config in [/r/unixporn](https://www.reddit.com/r/unixporn/)
