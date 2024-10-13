@@ -420,8 +420,9 @@ impl Network {
     fn fetch_networks_label(networks: &mut Networks) -> String {
         networks.refresh();
         let mut labels: Vec<String> = networks
-            .iter()
-            .filter(|(_, data)| data.total_received() > 0)
+            .into_iter()
+            // XXX: best effort to show only relevant network interfaces
+            .filter(|(name, data)| data.total_received() > 0 && *name != "lo")
             .map(|(interface_name, data)| {
                 format!(
                     "{interface_name}: ↓ {} / ↑ {}",
@@ -450,7 +451,6 @@ impl Network {
             (bytes as f64, "B")
         };
 
-        // Format the output to ensure fixed width
         format!("{:.0} {}", value, unit)
     }
 }
