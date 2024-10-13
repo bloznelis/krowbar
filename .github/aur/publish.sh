@@ -11,7 +11,7 @@ echo "Publishing to AUR as version ${VERSION}"
 cd $WD
 export GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 rm -rf .pkg
-git clone ssh://aur@aur.archlinux.org/krowbar.git .pkg 2>&1
+git clone ssh://aur@aur.archlinux.org/krowbar-git.git .pkg 2>&1
 export PKGVER=$VERSION
 
 envsubst '$PKGVER' < SRCINFO.template > .pkg/.SRCINFO
