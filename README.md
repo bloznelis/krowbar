@@ -139,6 +139,9 @@ font_weight = "bold"
 height = 20
 ```
 
+#### Showcase
+![krowbar-presentation-2](https://github.com/user-attachments/assets/ff42d90e-9324-4ac1-a20b-9d4b9fee44ac)
+
 #### krowbar might be for you, if you:
 - Skipped on BSPWM, because it has no default status bar
 - Are drowning in semi-working configuration
