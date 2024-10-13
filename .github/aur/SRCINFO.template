@@ -1,4 +1,4 @@
-pkgbase = krowbar
+pkgbase = krowbar-git
 	pkgdesc = BSPWM status bar
 	pkgver = ${PKGVER}
 	pkgrel = 1
@@ -13,4 +13,4 @@ pkgbase = krowbar
 	source = https://github.com/bloznelis/krowbar/archive/refs/tags/${PKGVER}.tar.gz
 	sha256sums = SKIP
 
-pkgname = krowbar
+pkgname = krowbar-git

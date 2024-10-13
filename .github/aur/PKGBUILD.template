@@ -1,6 +1,7 @@
 # Maintainer: Energi <lukas.bloznelis@gmail.com>
 
-pkgname=krowbar
+pkgname=krowbar-git
+_binname=krowbar
 pkgver=${PKGVER}
 pkgrel=1
 pkgdesc="BSPWM status bar"
@@ -10,24 +11,24 @@ license=(MIT)
 groups=()
 depends=(gtk4)
 makedepends=(git cargo)
-provides=("$pkgname")
-conflicts=("$pkgname")
+provides=("$_binname")
+conflicts=("$_binname")
 source=("git+$url")
 source=("$url/archive/refs/tags/$pkgver.tar.gz")
 sha256sums=('SKIP')
 
 build() {
-  cd "${pkgname}-${pkgver}"
+  cd "${_binname}-${pkgver}"
   cargo build --release
 }
 
 check() {
-  cd "${pkgname}-${pkgver}"
+  cd "${_binname}-${pkgver}"
   cargo check
 }
 
 package() {
-  cd "${pkgname}-${pkgver}"
-  install -Dm755 target/release/$pkgname "$pkgdir/usr/bin/$pkgname"
-  install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
+  cd "${_binname}-${pkgver}"
+  install -Dm755 target/release/$_binname "$pkgdir/usr/bin/$_binname"
+  install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$_binname/"
 }
