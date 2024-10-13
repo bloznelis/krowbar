@@ -14,7 +14,7 @@
 Generic status bars, while being complex, provide great customization, but I've always wanted a BSPWM bar that just works out-of-the-box.
 
 ### Features
-* Listens to BSPWM events directly via Unix socket, i.e. instant updates
+* Listens to BSPWM events directly via Unix socket, i.e. _instant_ updates
 * Focused desktop window count widget, no more getting lost in monocle mode
 * Urgent desktop support
 * All widgets are written in Rust – forget slow scripts
