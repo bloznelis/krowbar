@@ -19,7 +19,7 @@ Generic status bars, while being complex, provide great customization, but I've 
 * Urgent desktop support
 * All widgets are written in Rust – forget slow scripts
 * First class multi-monitor support
-* In-built desktop, node count, active node name, network, cpu, mem, storage, battery, clock widgets.
+* In-built desktop, node count, active node name, network, cpu, mem, storage, battery, clock widgets
 
 ### Install
 #### Cargo
