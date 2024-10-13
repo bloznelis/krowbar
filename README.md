@@ -29,7 +29,7 @@ Generic status bars, while being complex, provide great customization, but I've 
 
 ### Setup
 Add this to your `bspwmrc`:
-```
+```shell
 # Kill krowbar, when restarting BSPWM. Allows for quick iteration, if configuring.
 killall krowbar
 
