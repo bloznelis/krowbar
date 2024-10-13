@@ -90,8 +90,8 @@ pub struct Bar {
 impl Default for Bar {
     fn default() -> Self {
         Bar {
-            height: 10,
-            position: Position::Bottom,
+            height: 30,
+            position: Position::Top,
         }
     }
 }
