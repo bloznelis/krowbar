@@ -25,6 +25,8 @@ Generic status bars, while being complex, provide great customization, but I've 
 #### Cargo
 `cargo install krowbar`
 
+**note:** When installed via cargo you have to ensure `krowbar` is in PATH when BSPWM launches. Depending on your setup, appending to the PATH in .bashrc/.zshrc might be too late. Alternatively you can use global path, e.g. `/home/user/.cargo/bin/krowbar &` (which is not as nice).
+
 ### Setup
 Add this to your `bspwmrc`:
 ```
