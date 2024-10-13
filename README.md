@@ -22,10 +22,18 @@ Generic status bars, while being complex, provide great customization, but I've 
 * In-built desktop, node count, active node name, network, cpu, mem, storage, battery, clock widgets
 
 ### Install
+#### AUR
+`paru -S krowbar-git`
+
 #### Cargo
 `cargo install krowbar`
 
 **note:** When installed via cargo you have to ensure `krowbar` is in PATH when BSPWM launches. Depending on your setup, appending to the PATH in .bashrc/.zshrc might be too late. Alternatively you can use global path, e.g. `/home/user/.cargo/bin/krowbar &` (which is not as nice).
+
+#### Prebuilt binary
+1. Download the binary from [Releases](https://github.com/bloznelis/krowbar/releases)
+2. `tar -xzvf krowbar-{VERSION}-x86_64-linux-gnu.tar.gz`
+3. `cp krowbar-{VERSION}-x86_64-linux-gnu/krowbar /usr/local/bin/krowbar`
 
 ### Setup
 Add this to your `bspwmrc`:
@@ -136,6 +144,3 @@ height = 20
 - Are drowning in semi-working configuration
 - Need a decently looking, functional status bar while searching for a nice [eww](https://github.com/elkowar/eww) config in [/r/unixporn](https://www.reddit.com/r/unixporn/)
 - Always wanted something akin to [i3status](https://i3wm.org/docs/i3status.html) but for BSPWM
-
-### TODO
-- Prepare arch release
