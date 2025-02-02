@@ -1,4 +1,5 @@
 use anyhow::anyhow;
+use gdk4::glib::property::PropertyGet;
 use gtk4::{self as gtk};
 use std::{
     collections::HashSet,
@@ -13,9 +14,10 @@ use xbackend::X11Backend;
 
 use crate::{
     bspwm::{listen_to_bspwm, BspwmState, MonitorState},
+    config::{KrowbarConfig, Position},
     widgets::*,
     xbackend::{self, Monitor},
-    Args, Widget, config::{KrowbarConfig, Position},
+    Args, Widget,
 };
 
 pub const FOCUSED_DESKTOP: &str = "focused-desktop";
@@ -306,10 +308,12 @@ pub fn run(args: Args, cfg: KrowbarConfig) -> i32 {
         Err(err) => log::error!("failed while attaching css {err}"),
     });
 
-    application.connect_activate(move |app| match app_configure(app, args.clone(), cfg.clone()) {
-        Ok(_) => log::info!("bar configured"),
-        Err(err) => log::error!("failed while conifguring app {err}"),
-    });
+    application.connect_activate(
+        move |app| match app_configure(app, args.clone(), cfg.clone()) {
+            Ok(_) => log::info!("bar configured"),
+            Err(err) => log::error!("failed while conifguring app {err}"),
+        },
+    );
 
     //XXX: have to pass empty array here, because default `.run` implicitly tries to parse args,
     //making it clash with clap.
@@ -321,6 +325,7 @@ fn app_configure(app: &Application, args: Args, cfg: KrowbarConfig) -> anyhow::R
         Arc::new(X11Backend::new().map_err(|op| anyhow!("Failed to init X11 backend {:?}", op))?);
 
     let state = BspwmState::new().expect("pls");
+    let state = Arc::new(Mutex::new(state));
 
     let (sender, receiver) = async_broadcast::broadcast::<SystemEvent>(32);
 
@@ -344,8 +349,8 @@ fn app_configure(app: &Application, args: Args, cfg: KrowbarConfig) -> anyhow::R
                 monitor,
                 x11.clone(),
                 instruments.clone(),
+                state.clone(),
                 receiver.clone(),
-                state.find_monitor(&monitor.name)?,
                 &args,
                 &cfg,
             )
@@ -429,8 +434,8 @@ fn init_bar_window(
     monitor: &Monitor,
     x11: Arc<X11Backend>,
     instruments: Arc<Mutex<Instruments>>,
+    state: Arc<Mutex<BspwmState>>,
     receiver: async_broadcast::Receiver<SystemEvent>,
-    monitor_state: &MonitorState,
     args: &Args,
     cfg: &KrowbarConfig,
 ) -> anyhow::Result<()> {
@@ -444,8 +449,12 @@ fn init_bar_window(
 
     let (sender, receiver_bar_event) = async_channel::bounded::<BarEvent>(1);
 
+    let state = state.as_ref();
+    let ll = state.lock().expect("state mutex");
+    let monitor_state = ll.find_monitor(&monitor.name)?;
+
     let bar = Bar::new(
-        monitor_state,
+        &monitor_state,
         x11.clone(),
         instruments.clone(),
         sender.clone(),

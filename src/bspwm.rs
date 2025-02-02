@@ -1,8 +1,10 @@
+use std::sync::{Arc, Mutex};
+
 use anyhow::anyhow;
 use bspc_rs::events::{
-    self, DesktopEvent, Event, NodeEvent, NodeFlagInfo, Subscription, NodeStateInfo,
+    self, DesktopEvent, Event, NodeEvent, NodeFlagInfo, NodeStateInfo, Subscription,
 };
-use bspc_rs::properties::{Flag, Switch, State};
+use bspc_rs::properties::{Flag, State, Switch};
 use bspc_rs::query;
 use bspc_rs::selectors::{DesktopSelector, MonitorSelector, NodeSelector};
 
@@ -258,7 +260,7 @@ impl DesktopState {
 
 pub async fn listen_to_bspwm(
     sender: async_broadcast::Sender<SystemEvent>,
-    mut state: BspwmState,
+    state: Arc<Mutex<BspwmState>>
 ) -> anyhow::Result<()> {
     let subscriptions = vec![
         Subscription::DesktopFocus,
@@ -273,7 +275,8 @@ pub async fn listen_to_bspwm(
     let mut subscriber = events::subscribe(false, None, &subscriptions)?;
 
     for event in subscriber.events() {
-        log::info!("event {:?}", event);
+        //log::info!("event {:?}", event);
+        let mut state = state.lock().expect("state mutex");
         match event? {
             Event::DesktopEvent(event) => match event {
                 DesktopEvent::DesktopFocus(focus_info) => {
