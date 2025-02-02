@@ -1,3 +1,4 @@
+use std::future::IntoFuture;
 use std::sync::{Arc, Mutex};
 
 use anyhow::anyhow;
@@ -283,108 +284,107 @@ pub async fn listen_to_bspwm(
                     let updated_monitor = state.find_monitor_by_id(focus_info.monitor_id)?;
                     updated_monitor.update_focused_desktop(focus_info.desktop_id);
 
-                    let _ = sender
-                        .broadcast(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone()))
-                        .await?;
+                    let ret = sender.broadcast_direct(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone())).await?;
+                    drop(ret)
                 }
                 _ => {}
             },
-            Event::NodeEvent(NodeEvent::NodeFlag(NodeFlagInfo {
-                monitor_id,
-                desktop_id,
-                flag: Flag::Urgent,
-                switch,
-                ..
-            })) => {
-                let updated_monitor = state.find_monitor_by_id(monitor_id)?;
-                let updated_desktop = updated_monitor.find_desktop_mut(desktop_id);
-
-                if let Some(desktop) = updated_desktop {
-                    match switch {
-                        Switch::On => desktop.set_urgent(true),
-                        Switch::Off => desktop.set_urgent(false),
-                    }
-                }
-
-                let _ = sender
-                    .broadcast(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone()))
-                    .await?;
-            }
-            Event::NodeEvent(NodeEvent::NodeState(NodeStateInfo {
-                monitor_id,
-                desktop_id,
-                state: State::Fullscreen,
-                switch,
-                ..
-            })) => {
-                let updated_monitor = state.find_monitor_by_id(monitor_id)?;
-                let updated_desktop = updated_monitor.find_desktop_mut(desktop_id);
-                if let Some(desktop) = updated_desktop {
-                    match switch {
-                        Switch::On => desktop.set_fullscreen(true),
-                        Switch::Off => desktop.set_fullscreen(false),
-                    }
-                }
-
-                let _ = sender
-                    .broadcast(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone()))
-                    .await?;
-            }
-            Event::NodeEvent(NodeEvent::NodeFocus(node_focus_info)) => {
-                let updated_monitor = state.find_monitor_by_id(node_focus_info.monitor_id)?;
-                updated_monitor
-                    .update_active_node(node_focus_info.desktop_id, node_focus_info.node_id);
-
-                let _ = sender
-                    .broadcast(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone()))
-                    .await?;
-            }
-            Event::NodeEvent(NodeEvent::NodeAdd(node_add_info)) => {
-                state.update_all_desktop_window_count();
-                let updated_monitor = state.find_monitor_by_id(node_add_info.monitor_id)?;
-
-                let _ = sender
-                    .broadcast(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone()))
-                    .await?;
-            }
-            Event::NodeEvent(NodeEvent::NodeRemove(node_remove_info)) => {
-                state.update_all_desktop_window_count();
-                let updated_monitor = state.find_monitor_by_id(node_remove_info.monitor_id)?;
-
-                let _ = sender
-                    .broadcast(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone()))
-                    .await?;
-            }
-            Event::NodeEvent(NodeEvent::NodeSwap(node_swap_info)) => {
-                state.update_all_desktop_window_count();
-                let updated_monitor = state.find_monitor_by_id(node_swap_info.dst_monitor_id)?;
-
-                let _ = sender
-                    .broadcast(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone()))
-                    .await?;
-
-                let updated_monitor = state.find_monitor_by_id(node_swap_info.src_monitor_id)?;
-
-                let _ = sender
-                    .broadcast(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone()))
-                    .await?;
-            }
-            Event::NodeEvent(NodeEvent::NodeTransfer(node_transfer_info)) => {
-                state.update_all_desktop_window_count();
-                let updated_monitor =
-                    state.find_monitor_by_id(node_transfer_info.dst_monitor_id)?;
-
-                let _ = sender
-                    .broadcast(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone()))
-                    .await?;
-
-                let updated_monitor =
-                    state.find_monitor_by_id(node_transfer_info.src_monitor_id)?;
-
-                let _ = sender
-                    .broadcast(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone()))
-                    .await?;
-            }
+            //Event::NodeEvent(NodeEvent::NodeFlag(NodeFlagInfo {
+            //    monitor_id,
+            //    desktop_id,
+            //    flag: Flag::Urgent,
+            //    switch,
+            //    ..
+            //})) => {
+            //    let updated_monitor = state.find_monitor_by_id(monitor_id)?;
+            //    let updated_desktop = updated_monitor.find_desktop_mut(desktop_id);
+            //
+            //    if let Some(desktop) = updated_desktop {
+            //        match switch {
+            //            Switch::On => desktop.set_urgent(true),
+            //            Switch::Off => desktop.set_urgent(false),
+            //        }
+            //    }
+            //
+            //    let _ = sender
+            //        .broadcast(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone()))
+            //        .await?;
+            //}
+            //Event::NodeEvent(NodeEvent::NodeState(NodeStateInfo {
+            //    monitor_id,
+            //    desktop_id,
+            //    state: State::Fullscreen,
+            //    switch,
+            //    ..
+            //})) => {
+            //    let updated_monitor = state.find_monitor_by_id(monitor_id)?;
+            //    let updated_desktop = updated_monitor.find_desktop_mut(desktop_id);
+            //    if let Some(desktop) = updated_desktop {
+            //        match switch {
+            //            Switch::On => desktop.set_fullscreen(true),
+            //            Switch::Off => desktop.set_fullscreen(false),
+            //        }
+            //    }
+            //
+            //    let _ = sender
+            //        .broadcast(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone()))
+            //        .await?;
+            //}
+            //Event::NodeEvent(NodeEvent::NodeFocus(node_focus_info)) => {
+            //    let updated_monitor = state.find_monitor_by_id(node_focus_info.monitor_id)?;
+            //    updated_monitor
+            //        .update_active_node(node_focus_info.desktop_id, node_focus_info.node_id);
+            //
+            //    let _ = sender
+            //        .broadcast(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone()))
+            //        .await?;
+            //}
+            //Event::NodeEvent(NodeEvent::NodeAdd(node_add_info)) => {
+            //    state.update_all_desktop_window_count();
+            //    let updated_monitor = state.find_monitor_by_id(node_add_info.monitor_id)?;
+            //
+            //    let _ = sender
+            //        .broadcast(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone()))
+            //        .await?;
+            //}
+            //Event::NodeEvent(NodeEvent::NodeRemove(node_remove_info)) => {
+            //    state.update_all_desktop_window_count();
+            //    let updated_monitor = state.find_monitor_by_id(node_remove_info.monitor_id)?;
+            //
+            //    let _ = sender
+            //        .broadcast(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone()))
+            //        .await?;
+            //}
+            //Event::NodeEvent(NodeEvent::NodeSwap(node_swap_info)) => {
+            //    state.update_all_desktop_window_count();
+            //    let updated_monitor = state.find_monitor_by_id(node_swap_info.dst_monitor_id)?;
+            //
+            //    let _ = sender
+            //        .broadcast(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone()))
+            //        .await?;
+            //
+            //    let updated_monitor = state.find_monitor_by_id(node_swap_info.src_monitor_id)?;
+            //
+            //    let _ = sender
+            //        .broadcast(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone()))
+            //        .await?;
+            //}
+            //Event::NodeEvent(NodeEvent::NodeTransfer(node_transfer_info)) => {
+            //    state.update_all_desktop_window_count();
+            //    let updated_monitor =
+            //        state.find_monitor_by_id(node_transfer_info.dst_monitor_id)?;
+            //
+            //    let _ = sender
+            //        .broadcast(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone()))
+            //        .await?;
+            //
+            //    let updated_monitor =
+            //        state.find_monitor_by_id(node_transfer_info.src_monitor_id)?;
+            //
+            //    let _ = sender
+            //        .broadcast(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone()))
+            //        .await?;
+            //}
             other => log::info!("unknown event {:?}", other),
         }
     }
