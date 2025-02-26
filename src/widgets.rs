@@ -12,6 +12,7 @@ use xbackend::X11Backend;
 use crate::{
     bar::{EMPTY_DESKTOP, FOCUSED_DESKTOP, NON_EMPTY_DESKTOP, URGENT_DESKTOP},
     bspwm::MonitorState,
+    instruments::{self},
     xbackend::{self},
 };
 
@@ -452,5 +453,28 @@ impl Network {
         };
 
         format!("{:.0} {}", value, unit)
+    }
+}
+
+pub struct Volume {
+    pub label: gtk::Label,
+}
+
+impl Volume {
+    pub fn new() -> Self {
+        let label = Self::fetch_volume_label();
+        let label = Label::builder().css_name("volume").label(label).build();
+        Volume { label }
+    }
+
+    pub fn refresh(&mut self) {
+        let label = Self::fetch_volume_label();
+        self.label.set_label(&label);
+    }
+
+    fn fetch_volume_label() -> String {
+        instruments::alsa::get_volume_percents()
+            .map(|vol| format!("VOL {:.0}%", vol))
+            .unwrap_or(String::from("???"))
     }
 }

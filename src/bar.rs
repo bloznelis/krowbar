@@ -13,9 +13,10 @@ use xbackend::X11Backend;
 
 use crate::{
     bspwm::{listen_to_bspwm, BspwmState, MonitorState},
+    config::{KrowbarConfig, Position},
     widgets::*,
     xbackend::{self, Monitor},
-    Args, Widget, config::{KrowbarConfig, Position},
+    Args, Widget,
 };
 
 pub const FOCUSED_DESKTOP: &str = "focused-desktop";
@@ -46,6 +47,7 @@ struct Bar {
     storage: Storage,
     bat: Batteries,
     clock: Clock,
+    volume: Volume,
     bar_box: gtk::CenterBox,
 }
 
@@ -85,6 +87,7 @@ impl Bar {
                 Widget::Mem,
                 Widget::Disk,
                 Widget::Bat,
+                Widget::Volume,
                 Widget::Clock,
             ])
             .into_iter()
@@ -124,6 +127,7 @@ impl Bar {
         let storage = Storage::new(disks);
         let bat = Batteries::new(bat_manager).expect("Bat widget");
         let clock = Clock::new();
+        let volume = Volume::new();
 
         //XXX: nasty hack. Avoids separators where they are not needed
         let mut sep_added = false;
@@ -170,6 +174,10 @@ impl Bar {
                         box_right.append(bat_btn);
                     }
                 }
+                Widget::Volume => {
+                    add_sep();
+                    box_right.append(&volume.label);
+                }
                 Widget::Clock => {
                     box_right.append(&clock.button);
                 }
@@ -195,6 +203,7 @@ impl Bar {
             mem,
             bat,
             clock,
+            volume,
             bar_box,
         }
     }
@@ -242,6 +251,7 @@ async fn react_to_updates(
                         let _ = &bar.clock.refresh();
                         let _ = &bar.cpu.refresh(sys);
                         let _ = &bar.mem.refresh(sys);
+                        let _ = &bar.volume.refresh();
                     }
                     SystemEvent::DesktopStateUpdateNew(monitor) if monitor.monitor_name == bar.monitor_name => {
                         let label = monitor.node_count_label();
@@ -306,10 +316,12 @@ pub fn run(args: Args, cfg: KrowbarConfig) -> i32 {
         Err(err) => log::error!("failed while attaching css {err}"),
     });
 
-    application.connect_activate(move |app| match app_configure(app, args.clone(), cfg.clone()) {
-        Ok(_) => log::info!("bar configured"),
-        Err(err) => log::error!("failed while conifguring app {err}"),
-    });
+    application.connect_activate(
+        move |app| match app_configure(app, args.clone(), cfg.clone()) {
+            Ok(_) => log::info!("bar configured"),
+            Err(err) => log::error!("failed while conifguring app {err}"),
+        },
+    );
 
     //XXX: have to pass empty array here, because default `.run` implicitly tries to parse args,
     //making it clash with clap.

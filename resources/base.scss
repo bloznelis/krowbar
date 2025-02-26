@@ -26,6 +26,12 @@ battery {
     padding: $widget-padding;
 }
 
+volume {
+    background: $bg;
+    padding: $widget-padding;
+    color: $fg;
+}
+
 battery.battery-high {
     color: $ok_dim;
 }

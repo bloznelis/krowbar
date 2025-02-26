@@ -1,4 +1,5 @@
 mod bar;
+mod instruments;
 mod bspwm;
 mod widgets;
 mod xbackend;
@@ -24,6 +25,7 @@ pub enum Widget {
     Disk,
     Bat,
     Clock,
+    Volume
 }
 
 #[derive(Parser, Debug, Clone)]
