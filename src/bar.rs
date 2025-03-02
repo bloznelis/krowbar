@@ -12,7 +12,7 @@ use sysinfo::{Disks, Networks, System};
 use xbackend::X11Backend;
 
 use crate::{
-    bspwm::{listen_to_bspwm, BspwmState, MonitorState},
+    bspwm::{listen_to_bspwm, BspwmState, DesktopState, MonitorState},
     config::{KrowbarConfig, Position},
     widgets::*,
     xbackend::{self, Monitor},
@@ -34,6 +34,7 @@ pub enum SystemEvent {
     Tick,
     SlowTick,
     DesktopStateUpdateNew(MonitorState),
+    DesktopLayoutChange(DesktopState),
 }
 
 struct Bar {
@@ -252,6 +253,9 @@ async fn react_to_updates(
                         let _ = &bar.cpu.refresh(sys);
                         let _ = &bar.mem.refresh(sys);
                         let _ = &bar.volume.refresh();
+                    }
+                    SystemEvent::DesktopLayoutChange(desktop) => {
+                        bar.win_count.label.set_text(&desktop.node_count_label());
                     }
                     SystemEvent::DesktopStateUpdateNew(monitor) if monitor.monitor_name == bar.monitor_name => {
                         let label = monitor.node_count_label();

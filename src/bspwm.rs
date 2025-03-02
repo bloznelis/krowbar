@@ -1,8 +1,8 @@
 use anyhow::anyhow;
 use bspc_rs::events::{
-    self, DesktopEvent, Event, NodeEvent, NodeFlagInfo, Subscription, NodeStateInfo,
+    self, DesktopEvent, Event, NodeEvent, NodeFlagInfo, NodeStateInfo, Subscription,
 };
-use bspc_rs::properties::{Flag, Switch, State};
+use bspc_rs::properties::{Flag, State, Switch};
 use bspc_rs::query;
 use bspc_rs::selectors::{DesktopSelector, MonitorSelector, NodeSelector};
 
@@ -23,9 +23,16 @@ pub struct MonitorState {
 }
 
 #[derive(Debug, Clone)]
+pub enum Layout {
+    Tiled,
+    Monocle,
+}
+
+#[derive(Debug, Clone)]
 pub struct DesktopState {
     pub desktop_id: DesktopId,
     pub desktop_name: String,
+    pub layout: Layout,
     pub node_count: usize,
     pub is_active: bool,
     pub is_urgent: bool,
@@ -134,6 +141,13 @@ impl MonitorState {
         }
     }
 
+    pub fn update_layout(&mut self, desktop: u32, layout: Layout) -> Option<&mut DesktopState> {
+        self.find_desktop_mut(desktop).map(|d| {
+            d.layout = layout;
+            d
+        })
+    }
+
     pub fn update_active_node(&mut self, desktop_id: u32, active_node_id: u32) {
         for desktop in self.desktops.iter_mut() {
             if desktop.desktop_id == desktop_id {
@@ -156,11 +170,6 @@ impl MonitorState {
         )?;
 
         Ok(!result.is_empty())
-    }
-
-    pub fn focused_desktop_node_count(&self) -> Option<usize> {
-        self.focused_desktop_state()
-            .map(|desktop| desktop.node_count)
     }
 
     pub fn find_desktop(&self, desktop_id: u32) -> Option<&DesktopState> {
@@ -187,10 +196,9 @@ impl MonitorState {
     }
 
     pub fn node_count_label(&self) -> String {
-        match self.focused_desktop_node_count() {
-            Some(count) if count > 0 => format!("[{}]", count),
-            _ => String::new(),
-        }
+        self.focused_desktop_state()
+            .map(|desktop| desktop.node_count_label())
+            .unwrap_or(String::new())
     }
 }
 
@@ -224,6 +232,7 @@ impl DesktopState {
         Ok(DesktopState {
             desktop_id,
             desktop_name,
+            layout: Layout::Tiled, // XXX: is this safe to assume?
             node_count,
             is_active: Some(desktop_id) == active_desktop_id,
             is_urgent: false,
@@ -254,6 +263,19 @@ impl DesktopState {
         .map(|nodes| nodes.len())
         .unwrap_or(0)
     }
+
+    pub fn node_count_label(&self) -> String {
+        match self.layout {
+            Layout::Tiled => String::from("[T]"),
+            Layout::Monocle => {
+                if self.node_count > 0 {
+                    format!("[{}]", self.node_count)
+                } else {
+                    String::new()
+                }
+            }
+        }
+    }
 }
 
 pub async fn listen_to_bspwm(
@@ -262,6 +284,7 @@ pub async fn listen_to_bspwm(
 ) -> anyhow::Result<()> {
     let subscriptions = vec![
         Subscription::DesktopFocus,
+        Subscription::DesktopLayout,
         Subscription::NodeAdd,
         Subscription::NodeRemove,
         Subscription::NodeFocus,
@@ -283,6 +306,20 @@ pub async fn listen_to_bspwm(
                     let _ = sender
                         .broadcast(SystemEvent::DesktopStateUpdateNew(updated_monitor.clone()))
                         .await?;
+                }
+                DesktopEvent::DesktopLayout(layout_info) => {
+                    let updated_monitor = state.find_monitor_by_id(layout_info.monitor_id)?;
+                    let layout = match layout_info.layout {
+                        bspc_rs::properties::Layout::Tiled => Layout::Tiled,
+                        bspc_rs::properties::Layout::Monocle => Layout::Monocle,
+                    };
+                    if let Some(desktop_state) =
+                        updated_monitor.update_layout(layout_info.desktop_id, layout)
+                    {
+                        let _ = sender
+                            .broadcast(SystemEvent::DesktopLayoutChange(desktop_state.clone()))
+                            .await?;
+                    }
                 }
                 _ => {}
             },
