@@ -8,6 +8,7 @@ pkgbase = krowbar-git
 	makedepends = git
 	makedepends = cargo
 	depends = gtk4
+	depends = alsa-lib
 	provides = krowbar
 	conflicts = krowbar
 	source = https://github.com/bloznelis/krowbar/archive/refs/tags/${PKGVER}.tar.gz
