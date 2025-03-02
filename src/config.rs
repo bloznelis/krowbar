@@ -1,25 +1,14 @@
 use serde::{Deserialize, Serialize};
 use std::fs;
-use toml;
 
 use crate::Args;
 
-#[derive(Deserialize, Serialize, Clone, Debug)]
+#[derive(Deserialize, Serialize, Clone, Debug, Default)]
 #[serde(default)]
 pub struct KrowbarConfig {
     pub theme: Theme,
     pub font: Font,
     pub bar: Bar,
-}
-
-impl Default for KrowbarConfig {
-    fn default() -> Self {
-        KrowbarConfig {
-            theme: Theme::default(),
-            font: Font::default(),
-            bar: Bar::default(),
-        }
-    }
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug)]

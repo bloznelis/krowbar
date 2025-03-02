@@ -87,7 +87,7 @@ impl X11Backend {
         let (x, y) = match cfg.bar.position {
             Position::Top => (monitor.x_offset, monitor.y_offset),
             Position::Bottom => {
-                let x = monitor.x_offset.into();
+                let x = monitor.x_offset;
                 let y = monitor.y_offset + monitor.height as i16 - cfg.bar.height as i16;
 
                 (x, y)
@@ -135,8 +135,8 @@ impl X11Backend {
         self.conn.configure_window(
             win,
             &ConfigureWindowAux {
-                width: Some(width as u32),
-                height: Some(height as u32),
+                width: Some(width),
+                height: Some(height),
                 ..ConfigureWindowAux::default()
             },
         )?;

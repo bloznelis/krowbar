@@ -51,7 +51,7 @@ impl BspwmState {
         let monitor_names = stdout.split_whitespace().map(String::from);
 
         let monitors: Vec<MonitorState> = monitor_names
-            .map(|desktop_name| MonitorState::new(desktop_name))
+            .map(MonitorState::new)
             .collect::<anyhow::Result<Vec<MonitorState>>>()?;
 
         Ok(BspwmState { monitors })
@@ -126,7 +126,7 @@ impl MonitorState {
         query::query_desktops(
             false,
             None,
-            Some(MonitorSelector(&monitor_name)),
+            Some(MonitorSelector(monitor_name)),
             Some(DesktopSelector(".active")),
             None,
         )
@@ -198,7 +198,7 @@ impl MonitorState {
     pub fn node_count_label(&self) -> String {
         self.focused_desktop_state()
             .map(|desktop| desktop.node_count_label())
-            .unwrap_or(String::new())
+            .unwrap_or_default()
     }
 }
 
@@ -257,7 +257,7 @@ impl DesktopState {
         query::query_nodes(
             None,
             None,
-            Some(DesktopSelector(&desktop_name)),
+            Some(DesktopSelector(desktop_name)),
             Some(NodeSelector(".window.!hidden")),
         )
         .map(|nodes| nodes.len())

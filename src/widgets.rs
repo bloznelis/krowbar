@@ -26,8 +26,7 @@ impl DesktopButtons {
             buttons: monitor_state
                 .desktops
                 .iter()
-                .enumerate()
-                .map(|(_, desktop)| {
+                .map(|desktop| {
                     let css = if desktop.is_active {
                         vec![FOCUSED_DESKTOP]
                     } else if desktop.is_urgent {
@@ -118,7 +117,7 @@ impl Storage {
         let usage = Self::get_used_percentage(disks);
         let button = Button::builder()
             .css_name("storage")
-            .label(&Self::format(usage))
+            .label(Self::format(usage))
             .build();
 
         let mut storage = Storage { button };
@@ -153,9 +152,8 @@ impl Storage {
             total_available += disk.available_space();
         }
         let total_used = total_space - total_available;
-        let used_percentage = total_used as f32 / total_space as f32 * 100.0;
 
-        used_percentage
+        total_used as f32 / total_space as f32 * 100.0
     }
 
     fn format(usage: f32) -> String {
@@ -172,7 +170,7 @@ impl Cpu {
         let usage = Self::get_used_percentage(sys);
         let button = Button::builder()
             .css_name("cpu")
-            .label(&Self::format(usage))
+            .label(Self::format(usage))
             .build();
 
         let mut cpu = Cpu { button };
@@ -217,7 +215,7 @@ impl Mem {
         let usage = Self::get_used_percentage(sys);
         let button = Button::builder()
             .css_name("mem")
-            .label(&Self::format(usage))
+            .label(Self::format(usage))
             .build();
 
         let mut mem = Mem { button };
@@ -245,9 +243,7 @@ impl Mem {
 
     fn get_used_percentage(sys: &mut System) -> f32 {
         sys.refresh_memory();
-        let used_percentage = sys.used_memory() as f32 / sys.total_memory() as f32 * 100.0;
-
-        used_percentage
+        sys.used_memory() as f32 / sys.total_memory() as f32 * 100.0
     }
 
     fn format(usage: f32) -> String {
@@ -265,7 +261,7 @@ impl Clock {
     pub fn new() -> Self {
         let button = Button::builder()
             .css_name("clock")
-            .label(&format!("{}", Local::now().format("%H:%M")))
+            .label(format!("{}", Local::now().format("%H:%M")))
             .build();
 
         let cal = gtk::Calendar::builder().visible(false).build();
@@ -355,9 +351,9 @@ impl Batteries {
         let soc: f32 = soc * 100.0;
 
         let label = match battery.state() {
-            battery::State::Charging => format!("{:.0}% {}", soc, Self::charging_label(&battery)),
+            battery::State::Charging => format!("{:.0}% {}", soc, Self::charging_label(battery)),
             battery::State::Discharging => {
-                format!("{:.0}% {}", soc, Self::discharging_label(&battery))
+                format!("{:.0}% {}", soc, Self::discharging_label(battery))
             }
             battery::State::Empty => String::from("EMPTY"),
             battery::State::Full => String::from("100%"),
@@ -384,14 +380,14 @@ impl Batteries {
         bat.time_to_full()
             .map(|time| Duration::from_secs(time.get::<battery::units::time::second>() as u64))
             .map(|dur| format!("(CHRG {})", Self::format_duration(dur)))
-            .unwrap_or(String::new())
+            .unwrap_or_default()
     }
 
     fn discharging_label(bat: &Battery) -> String {
         bat.time_to_empty()
             .map(|time| Duration::from_secs(time.get::<battery::units::time::second>() as u64))
             .map(|dur| format!("(DISCHRG {})", Self::format_duration(dur)))
-            .unwrap_or(String::new())
+            .unwrap_or_default()
     }
 
     fn format_duration(dur: Duration) -> String {

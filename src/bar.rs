@@ -1,9 +1,7 @@
 use anyhow::anyhow;
 use gtk4::{self as gtk};
 use std::{
-    collections::HashSet,
-    sync::{Arc, Mutex},
-    time::Duration,
+    collections::HashSet, rc::Rc, sync::{Arc, Mutex}, time::Duration
 };
 use tinytemplate::TinyTemplate;
 
@@ -63,7 +61,7 @@ impl Bar {
     fn new(
         monitor_state: &MonitorState,
         x11: Arc<X11Backend>,
-        instruments: Arc<Mutex<Instruments>>,
+        instruments: Rc<Mutex<Instruments>>,
         sender: async_channel::Sender<BarEvent>,
         monitor: &Monitor,
         args: &Args,
@@ -73,7 +71,7 @@ impl Bar {
         let disabled_widgets: HashSet<Widget> = args
             .disabled_widgets
             .clone()
-            .unwrap_or(vec![])
+            .unwrap_or_default()
             .into_iter()
             .collect();
         let enabled_widgets: Vec<Widget> = args
@@ -119,9 +117,9 @@ impl Bar {
             bat_manager,
         } = &mut *instruments.lock().expect("instruments mutex");
 
-        let desktop_buttons = DesktopButtons::new(&monitor_state);
-        let win_count = WinCount::new(&monitor_state);
-        let active_node = ActiveNode::new(x11.clone(), &monitor_state);
+        let desktop_buttons = DesktopButtons::new(monitor_state);
+        let win_count = WinCount::new(monitor_state);
+        let active_node = ActiveNode::new(x11.clone(), monitor_state);
         let network = Network::new(networks);
         let cpu = Cpu::new(sys);
         let mem = Mem::new(sys);
@@ -224,8 +222,8 @@ async fn react_to_updates(
     channel_receiver: async_channel::Receiver<BarEvent>,
     mut bar: Bar,
     x11: Arc<X11Backend>,
-    instruments: Arc<Mutex<Instruments>>,
-    window: Arc<ApplicationWindow>,
+    instruments: Rc<Mutex<Instruments>>,
+    window: Rc<ApplicationWindow>,
 ) -> anyhow::Result<()> {
     loop {
         tokio::select! {
@@ -345,7 +343,7 @@ fn app_configure(app: &Application, args: Args, cfg: KrowbarConfig) -> anyhow::R
     let networks = Networks::new_with_refreshed_list();
     let bat_manager = battery::Manager::new().expect("Bat manager");
 
-    let instruments = Arc::new(Mutex::new(Instruments {
+    let instruments = Rc::new(Mutex::new(Instruments {
         sys,
         networks,
         disks,
@@ -354,7 +352,7 @@ fn app_configure(app: &Application, args: Args, cfg: KrowbarConfig) -> anyhow::R
 
     x11.monitors
         .iter()
-        .map(|monitor| {
+        .try_for_each(|monitor| {
             init_bar_window(
                 app,
                 monitor,
@@ -365,8 +363,7 @@ fn app_configure(app: &Application, args: Args, cfg: KrowbarConfig) -> anyhow::R
                 &args,
                 &cfg,
             )
-        })
-        .collect::<anyhow::Result<()>>()?;
+        })?;
 
     let sender_cloned = sender.clone();
     let _ = tokio::spawn(async move {
@@ -444,7 +441,7 @@ fn init_bar_window(
     app: &Application,
     monitor: &Monitor,
     x11: Arc<X11Backend>,
-    instruments: Arc<Mutex<Instruments>>,
+    instruments: Rc<Mutex<Instruments>>,
     receiver: async_broadcast::Receiver<SystemEvent>,
     monitor_state: &MonitorState,
     args: &Args,
@@ -472,7 +469,7 @@ fn init_bar_window(
     window.set_child(Some(&bar.bar_box));
 
     let x11_cloned = x11.clone();
-    let window_ref = Arc::new(window);
+    let window_ref = Rc::new(window);
     let window_ref_cloned = window_ref.clone();
     gtk::glib::spawn_future_local(async move {
         let result = react_to_updates(
