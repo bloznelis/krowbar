@@ -21,6 +21,9 @@ Generic status bars, while being complex, provide great customization, but I've 
 * First class multi-monitor support
 * In-built desktop, node count, active node name, network, cpu, mem, storage, battery, clock, volume widgets
 
+#### Showcase
+<img width="1919" alt="image" src="https://github.com/user-attachments/assets/a3c513eb-aa52-4c50-8afc-5fcacec39ef5" />
+
 ### Install
 #### AUR
 `paru -S krowbar-git`
@@ -138,9 +141,6 @@ font_weight = "bold"
 [bar]
 height = 20
 ```
-
-#### Showcase
-<img width="1919" alt="image" src="https://github.com/user-attachments/assets/a3c513eb-aa52-4c50-8afc-5fcacec39ef5" />
 
 #### krowbar might be for you, if you:
 - Skipped on BSPWM, because it has no default status bar
