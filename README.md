@@ -1,6 +1,6 @@
 <h2 align=center> <b>krowbar</b> </h2>
 
-<p align="center"> <img alt="GitHub release (latest SemVer)" src="https://github.com/bloznelis/krowbar/blob/master/images/krowbarx2.png"> </p>
+<p align="center"> <img alt="GitHub release (latest SemVer)" src="https://github.com/bloznelis/krowbar/blob/master/images/krowbarx2.svg"> </p>
 <div align="center">
 
 > "Oh, and before I forget, I think you dropped this back in Black Mesa!" [[1]](https://half-life.fandom.com/wiki/Crowbar)
