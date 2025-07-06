@@ -1,3 +1,4 @@
+use alsa::Mixer;
 use battery::Battery;
 use gtk::prelude::ButtonExt;
 use gtk::prelude::*;
@@ -457,20 +458,32 @@ pub struct Volume {
 }
 
 impl Volume {
-    pub fn new() -> Self {
-        let label = Self::fetch_volume_label();
+    pub fn new() -> Volume {
+        let mixer = Mixer::new("default", false).expect("Volume widget failure");
+        let label = Self::fetch_volume_label(mixer);
         let label = Label::builder().css_name("volume").label(label).build();
+
         Volume { label }
     }
 
     pub fn refresh(&mut self) {
-        let label = Self::fetch_volume_label();
+        let mixer = Mixer::new("default", false).expect("Volume widget failure");
+        let label = Self::fetch_volume_label(mixer);
+
         self.label.set_label(&label);
     }
 
-    fn fetch_volume_label() -> String {
-        instruments::alsa::get_volume_percents()
-            .map(|vol| format!("VOL {:.0}%", vol))
-            .unwrap_or(String::from("???"))
+    fn fetch_volume_label(mixer: Mixer) -> String {
+        if let Ok(muted) = instruments::alsa::is_muted(&mixer) {
+            if muted {
+                "VOL muted".to_string()
+            } else {
+                instruments::alsa::get_volume_percents(&mixer)
+                    .map(|vol| format!("VOL {:.0}%", vol))
+                    .unwrap_or(String::from("???"))
+            }
+        } else {
+            "???".to_string()
+        }
     }
 }
