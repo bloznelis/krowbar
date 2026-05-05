@@ -458,8 +458,10 @@ pub struct Volume {
 }
 
 impl Volume {
+    const MIXER_NAME: &str = "hw:0";
+
     pub fn new() -> Volume {
-        let mixer = Mixer::new("default", false).expect("Volume widget failure");
+        let mixer = Mixer::new(Self::MIXER_NAME, false).expect("Volume widget failure");
         let label = Self::fetch_volume_label(mixer);
         let label = Label::builder().css_name("volume").label(label).build();
 
@@ -467,7 +469,7 @@ impl Volume {
     }
 
     pub fn refresh(&mut self) {
-        let mixer = Mixer::new("default", false).expect("Volume widget failure");
+        let mixer = Mixer::new(Self::MIXER_NAME, false).expect("Volume widget failure");
         let label = Self::fetch_volume_label(mixer);
 
         self.label.set_label(&label);
